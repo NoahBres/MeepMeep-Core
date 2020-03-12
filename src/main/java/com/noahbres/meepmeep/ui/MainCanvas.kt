@@ -1,22 +1,24 @@
 package com.noahbres.meepmeep.ui
 
-import java.awt.Canvas
-import java.awt.Color
-import java.awt.Font
-import java.awt.Graphics
+import java.awt.*
+import java.awt.image.BufferStrategy
 
-class MainCanvas: Canvas() {
+class MainCanvas(private var internalWidth: Int, private var internalHeight: Int): Canvas() {
+    lateinit var bufferStrat: BufferStrategy
+
     init {
-        background = Color.black
+        setBounds(0, 0, internalWidth, internalHeight)
+        ignoreRepaint = true
     }
 
-    override fun paint(g: Graphics) {
-        super.paint(g)
+    fun start() {
+        createBufferStrategy(2)
+        bufferStrat = bufferStrategy
 
-        g.color = Color.RED
+        requestFocus()
+    }
 
-        g.font = Font("Bold", 1, 20)
-
-        g.drawString("end me", 100, 100)
+    override fun getPreferredSize(): Dimension {
+        return Dimension(internalWidth, internalHeight)
     }
 }
