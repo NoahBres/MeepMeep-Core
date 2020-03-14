@@ -1,12 +1,13 @@
 package com.noahbres.meepmeep.util
 
-import java.awt.Graphics2D
-
 class LoopManager(targetFPS: Long, val updateFunction: (deltaTime: Long) -> Unit, val renderFunction: () -> Unit): Runnable {
     private val targetDeltaLoop = (1000 * 1000 * 1000) / targetFPS // Nanoseconds / fps
 
     private var running = true
 
+    var fps = 0.0
+    private var fpsCounter = 0
+    private var fpsCounterTime = 1000
     override fun run() {
         var beginLoopTime = 0L
         var endLoopTime = 0L
@@ -14,10 +15,10 @@ class LoopManager(targetFPS: Long, val updateFunction: (deltaTime: Long) -> Unit
         var lastUpdateTime = 0L
         var deltaLoop = 0L
 
+        var startFpsTime = System.currentTimeMillis()
+
         while(running) {
             beginLoopTime = System.nanoTime()
-
-            render()
 
             lastUpdateTime = currentUpdateTime
             currentUpdateTime = System.nanoTime()
@@ -33,6 +34,13 @@ class LoopManager(targetFPS: Long, val updateFunction: (deltaTime: Long) -> Unit
             }
 
             render()
+
+            fpsCounter++
+            if(System.currentTimeMillis() - startFpsTime > fpsCounterTime) {
+                fps = (fpsCounter.toDouble() / ((System.currentTimeMillis() - startFpsTime) / 1000))
+                fpsCounter = 0
+                startFpsTime = System.currentTimeMillis()
+            }
         }
     }
 
