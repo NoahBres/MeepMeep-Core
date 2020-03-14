@@ -1,5 +1,9 @@
 package com.noahbres.meepmeep.util
 
+import com.acmerobotics.roadrunner.geometry.Vector2d
+import kotlin.math.max
+import kotlin.math.min
+
 class FieldUtil {
     companion object {
         @JvmStatic
@@ -9,55 +13,28 @@ class FieldUtil {
         var FIELD_HEIGHT = 144
 
         @JvmStatic
-        var CENTER_X = 0
-
-        @JvmStatic
-        var CENTER_Y = 0
-
-        @JvmStatic
-        var FLIP_X_Y_AXIS = true
-
-        @JvmStatic
-        var FLIP_SIGN_X_AXIS = false
-
-        @JvmStatic
-        var FLIP_SIGN_Y_AXIS = true
-
-        @JvmStatic
-        fun screenCoordsToFieldCoords(screenX: Double, screenY: Double, canvasWidth: Double, canvasHeight: Double): Array<Double> {
-            // Assume that 0,0 is top left for java graphics coordinate system
-            // Convert x/y to percentage
-            val percentageX = screenX / canvasWidth
-            val percentageY = screenY / canvasHeight
-
-            // Figure out top left for field coordinates
-            val topLeftX = (CENTER_X - FIELD_WIDTH) / 2
-            val topLeftY = (CENTER_Y - FIELD_HEIGHT) / 2
-
-            val fieldX = ((percentageX * FIELD_WIDTH) + topLeftX) * (if (FLIP_SIGN_X_AXIS) 1 else -1)
-            val fieldY = ((percentageY * FIELD_HEIGHT) + topLeftY) * (if (FLIP_SIGN_Y_AXIS) -1 else 1)
-
-            return if(FLIP_X_Y_AXIS) arrayOf(fieldY, fieldX) else arrayOf(fieldX, fieldY)
+        fun screenCoordsToFieldCoords(vector2d: Vector2d, canvasWidth: Double, canvasHeight: Double): Vector2d {
+            return mirrorY(vector2d) - Vector2d(FIELD_WIDTH / 2.0, FIELD_HEIGHT / 2.0) / max(canvasWidth, canvasHeight) / FIELD_WIDTH.toDouble()
         }
 
         @JvmStatic
-        fun fieldCoordsToScreenCoords(fieldX: Double, fieldY: Double, canvasWidth: Double, canvasHeight: Double): Array<Double> {
-            var convertedX = fieldX * (if (FLIP_SIGN_X_AXIS) -1 else 1)
-            var convertedY = fieldY * (if (FLIP_SIGN_Y_AXIS) -1 else 1)
+        fun fieldCoordsToScreenCoords(vector2d: Vector2d, canvasWidth: Double, canvasHeight: Double): Vector2d {
+           return (mirrorY(vector2d) + Vector2d(FIELD_WIDTH / 2.0, FIELD_HEIGHT / 2.0)) * min(canvasWidth, canvasHeight) / FIELD_WIDTH.toDouble()
+        }
 
-            if(FLIP_X_Y_AXIS) {
-                convertedX = fieldY * (if (FLIP_SIGN_Y_AXIS) -1 else 1)
-                convertedY = fieldX * (if (FLIP_SIGN_X_AXIS) 1 else -1)
-            }
+        @JvmStatic
+        fun scaleInchesToPixel(inches: Double, canvasWidth: Double, canvasHeight: Double): Double {
+            return inches / min(FIELD_WIDTH.toDouble(), FIELD_HEIGHT.toDouble()) * min(canvasWidth, canvasHeight)
+        }
 
-            if(FLIP_SIGN_X_AXIS) convertedX *= -1
-            if(!FLIP_SIGN_Y_AXIS) convertedY *= -1
+        // Mirror x
+        private fun mirrorX(vector: Vector2d): Vector2d {
+            return Vector2d(-vector.x, vector.y)
+        }
 
-            // Figure out top left for field coordinates
-            val topLeftX = (CENTER_X - FIELD_WIDTH) / 2
-            val topLeftY = (CENTER_Y - FIELD_HEIGHT) / 2
-
-            return arrayOf(0.0, 0.0)
+        // Mirror y
+        private fun mirrorY(vector: Vector2d): Vector2d {
+            return Vector2d(vector.x, -vector.y)
         }
     }
 }
