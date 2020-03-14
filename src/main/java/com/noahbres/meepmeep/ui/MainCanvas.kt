@@ -8,6 +8,7 @@ class MainCanvas(private var internalWidth: Int, private var internalHeight: Int
 
     init {
         setBounds(0, 0, internalWidth, internalHeight)
+        preferredSize = Dimension(internalWidth, internalHeight)
         ignoreRepaint = true
     }
 
