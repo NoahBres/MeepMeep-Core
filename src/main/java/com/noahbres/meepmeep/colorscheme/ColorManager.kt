@@ -1,13 +1,27 @@
 package com.noahbres.meepmeep.colorscheme
 
-import java.awt.Color
+import com.noahbres.meepmeep.colorscheme.scheme.ColorSchemeRed
 
 class ColorManager {
     companion object {
-        @JvmField val DEFAULT_THEME = Scheme(Color.RED, Color.RED, Color.RED, Color.RED)
-        @JvmField val GF_THEME = Scheme(Color.RED, Color.RED, Color.RED, Color.RED)
+        @JvmField val COLOR_PALETTE = ColorPalette.DEFAULT_PALETTE
+
+        @JvmField val DEFAULT_THEME: ColorScheme = ColorSchemeRed()
     }
 
     var isDarkMode = false
-    var theme = DEFAULT_THEME
+
+    private var lightTheme: ColorScheme = DEFAULT_THEME
+    private var darkTheme: ColorScheme = DEFAULT_THEME
+
+    val theme: ColorScheme
+        get() {
+            return if(!isDarkMode) lightTheme else darkTheme
+        }
+
+    @JvmOverloads
+    fun setTheme(themeLight: ColorScheme, themeDark: ColorScheme = themeLight) {
+        lightTheme = themeLight
+        darkTheme = themeDark
+    }
 }
