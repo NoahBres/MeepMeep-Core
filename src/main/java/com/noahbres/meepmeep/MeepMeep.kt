@@ -9,6 +9,7 @@ import com.noahbres.meepmeep.entity.BotEntity
 import com.noahbres.meepmeep.entity.Entity
 import com.noahbres.meepmeep.entity.ThemedEntity
 import com.noahbres.meepmeep.ui.WindowFrame
+import com.noahbres.meepmeep.util.FieldUtil
 import com.noahbres.meepmeep.util.LoopManager
 import java.awt.*
 import java.awt.event.MouseListener
@@ -21,6 +22,7 @@ class MeepMeep(val windowSize: Int) {
     companion object {
         @JvmStatic
         lateinit var DEFAULT_BOT_ENTITY: BotEntity
+
         @JvmStatic
         lateinit var DEFAULT_AXES_ENTITY: AxesEntity
     }
@@ -47,7 +49,15 @@ class MeepMeep(val windowSize: Int) {
         g.clearRect(0, 0, canvas.width, canvas.height)
 
         // render
-        if (bg != null) g.drawImage(bg, 0, 0, null)
+        if (bg != null) {
+//            val bgAlpha = 0.6f
+//            val resetComposite = g.composite
+//            val alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, bgAlpha)
+//
+//            g.composite = alphaComposite
+            g.drawImage(bg, 0, 0, null)
+//            g.composite = resetComposite
+        }
 
         entityList.forEach { it.render(g, canvas.width, canvas.height) }
 
@@ -77,8 +87,11 @@ class MeepMeep(val windowSize: Int) {
 
         fontCMUBoldLight = Font.createFont(Font.TRUETYPE_FONT, File("res/font/cmunbi.ttf")).deriveFont(20f)
 
-        DEFAULT_BOT_ENTITY = BotEntity(18.0, 18.0, Pose2d(), ColorManager.DEFAULT_THEME, 0.8, windowSize, windowSize)
-        DEFAULT_AXES_ENTITY = AxesEntity(0.8, ColorManager.DEFAULT_THEME, 0.3, 0.9, windowSize, windowSize, fontCMUBoldLight, 20f)
+        FieldUtil.CANVAS_WIDTH = windowSize.toDouble()
+        FieldUtil.CANVAS_HEIGHT = windowSize.toDouble()
+
+        DEFAULT_BOT_ENTITY = BotEntity(18.0, 18.0, Pose2d(), colorManager.theme, 0.8, windowSize, windowSize)
+        DEFAULT_AXES_ENTITY = AxesEntity(0.8, colorManager.theme, windowSize, windowSize, fontCMUBoldLight, 20f)
 
         setBackground(Background.GRID_BLUE)
 
@@ -88,6 +101,12 @@ class MeepMeep(val windowSize: Int) {
 
     fun start(): MeepMeep {
         windowFrame.isVisible = true
+
+        // Default added entities are initialized before color schemes are set
+        // Thus make sure to reset them
+        entityList.forEach {
+            if (it is ThemedEntity) it.switchScheme(colorManager.theme)
+        }
 
         Thread(loopManager).start()
 
