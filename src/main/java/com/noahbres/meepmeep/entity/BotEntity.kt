@@ -45,18 +45,18 @@ class BotEntity(
     }
 
     override fun render(gfx: Graphics2D, canvasWidth: Int, canvasHeight: Int) {
-        val coords = FieldUtil.fieldCoordsToScreenCoords(Vector2d(pose.x, pose.y), canvasWidth.toDouble(), canvasHeight.toDouble())
+        val coords = FieldUtil.fieldCoordsToScreenCoords(Vector2d(pose.x, pose.y))
 
         val transform = AffineTransform()
         transform.translate(coords.x, coords.y)
         transform.rotate(pose.heading)
         transform.translate(
-                FieldUtil.scaleInchesToPixel(-width / 2, canvasWidth.toDouble(), canvasHeight.toDouble()),
-                FieldUtil.scaleInchesToPixel(-height / 2, canvasWidth.toDouble(), canvasHeight.toDouble())
+                FieldUtil.scaleInchesToPixel(-width / 2),
+                FieldUtil.scaleInchesToPixel(-height / 2)
         )
         transform.scale(
-                FieldUtil.scaleInchesToPixel(width, canvasWidth.toDouble(), canvasHeight.toDouble()) / canvasWidth,
-                FieldUtil.scaleInchesToPixel(height, canvasWidth.toDouble(), canvasHeight.toDouble()) / canvasHeight
+                FieldUtil.scaleInchesToPixel(width) / canvasWidth,
+                FieldUtil.scaleInchesToPixel(height) / canvasHeight
         )
 
         gfx.drawImage(baseBufferedImage, transform, null)
