@@ -17,7 +17,7 @@ import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.UIManager
 
-open class MeepMeep(val windowSize: Int) {
+open class MeepMeep<T>(private val windowSize: Int) {
     companion object {
         @JvmStatic
         lateinit var DEFAULT_BOT_ENTITY: BotEntity
@@ -96,7 +96,7 @@ open class MeepMeep(val windowSize: Int) {
         addEntity(DEFAULT_AXES_ENTITY)
     }
 
-    fun start(): MeepMeep {
+    open fun start(): T {
         windowFrame.isVisible = true
 
         // Default added entities are initialized before color schemes are set
@@ -107,11 +107,11 @@ open class MeepMeep(val windowSize: Int) {
 
         Thread(loopManager).start()
 
-        return this
+        return this as T
     }
 
     //-------------Theme Settings-------------//
-    fun setBackground(background: Background = Background.GRID_BLUE): MeepMeep {
+    fun setBackground(background: Background = Background.GRID_BLUE): T {
         bg = when (background) {
             Background.GRID_BLUE -> {
                 colorManager.isDarkMode = false
@@ -135,43 +135,43 @@ open class MeepMeep(val windowSize: Int) {
             }
         }.getScaledInstance(windowSize, windowSize, Image.SCALE_SMOOTH)
 
-        return this
+        return this as T
     }
 
-    fun setBackground(image: Image): MeepMeep {
+    fun setBackground(image: Image): T {
         bg = image.getScaledInstance(windowSize, windowSize, Image.SCALE_SMOOTH)
 
-        return this
+        return this as T
     }
 
     @JvmOverloads
-    fun setTheme(schemeLight: ColorScheme, schemeDark: ColorScheme = schemeLight): MeepMeep {
+    fun setTheme(schemeLight: ColorScheme, schemeDark: ColorScheme = schemeLight): T {
         colorManager.setTheme(schemeLight, schemeDark)
 
         entityList.forEach {
             if (it is ThemedEntity) it.switchScheme(colorManager.theme)
         }
 
-        return this
+        return this as T
     }
 
-    fun setDarkMode(isDarkMode: Boolean): MeepMeep {
+    fun setDarkMode(isDarkMode: Boolean): T {
         colorManager.isDarkMode = isDarkMode
 
-        return this
+        return this as T
     }
 
     //-------------Robot Settings-------------//
-    fun setBotDimensions(width: Double, height: Double): MeepMeep {
+    fun setBotDimensions(width: Double, height: Double): T {
         if (DEFAULT_BOT_ENTITY in entityList) {
             DEFAULT_BOT_ENTITY.setDimensions(width, height)
         }
 
-        return this
+        return this as T
     }
 
     //-------------Entity-------------//
-    fun addEntity(entity: Entity): MeepMeep {
+    fun addEntity(entity: Entity): T {
         entityList.add(entity)
         entityListDirty = true
 
@@ -179,14 +179,14 @@ open class MeepMeep(val windowSize: Int) {
 
         if (entity is MouseMotionListener) canvas.addMouseMotionListener(entity)
 
-        return this
+        return this as T
     }
 
-    fun clearEntity(entity: Entity): MeepMeep {
+    fun removeEntity(entity: Entity): T {
         entityList.remove(entity)
         entityListDirty = true
 
-        return this
+        return this as T
     }
 
     enum class Background {
