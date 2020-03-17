@@ -1,9 +1,8 @@
-package com.noahbres.meepmeep.ui
+package com.noahbres.meepmeep.core.ui
 
 import java.awt.FlowLayout
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.awt.event.WindowListener
 import javax.swing.JFrame
 import kotlin.system.exitProcess
 

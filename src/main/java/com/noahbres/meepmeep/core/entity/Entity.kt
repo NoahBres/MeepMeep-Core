@@ -1,4 +1,4 @@
-package com.noahbres.meepmeep.entity
+package com.noahbres.meepmeep.core.entity
 
 import java.awt.Graphics2D
 

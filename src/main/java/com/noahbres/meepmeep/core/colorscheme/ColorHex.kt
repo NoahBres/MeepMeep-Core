@@ -1,4 +1,4 @@
-package com.noahbres.meepmeep.colorscheme
+package com.noahbres.meepmeep.core.colorscheme
 
 import java.awt.Color
 

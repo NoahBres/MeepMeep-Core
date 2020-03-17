@@ -1,16 +1,15 @@
-package com.noahbres.meepmeep
+package com.noahbres.meepmeep.core
 
-import com.acmerobotics.roadrunner.geometry.Pose2d
-import com.acmerobotics.roadrunner.trajectory.Trajectory
-import com.noahbres.meepmeep.colorscheme.ColorManager
-import com.noahbres.meepmeep.colorscheme.ColorScheme
-import com.noahbres.meepmeep.entity.AxesEntity
-import com.noahbres.meepmeep.entity.BotEntity
-import com.noahbres.meepmeep.entity.Entity
-import com.noahbres.meepmeep.entity.ThemedEntity
-import com.noahbres.meepmeep.ui.WindowFrame
-import com.noahbres.meepmeep.util.FieldUtil
-import com.noahbres.meepmeep.util.LoopManager
+import com.noahbres.meepmeep.core.colorscheme.ColorManager
+import com.noahbres.meepmeep.core.colorscheme.ColorScheme
+import com.noahbres.meepmeep.core.entity.AxesEntity
+import com.noahbres.meepmeep.core.entity.BotEntity
+import com.noahbres.meepmeep.core.entity.Entity
+import com.noahbres.meepmeep.core.entity.ThemedEntity
+import com.noahbres.meepmeep.core.ui.WindowFrame
+import com.noahbres.meepmeep.core.util.LoopManager
+import com.noahbres.meepmeep.core.util.FieldUtil
+import com.noahbres.meepmeep.core.util.Pose2d
 import java.awt.*
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
@@ -18,7 +17,7 @@ import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.UIManager
 
-class MeepMeep(val windowSize: Int) {
+open class MeepMeep(val windowSize: Int) {
     companion object {
         @JvmStatic
         lateinit var DEFAULT_BOT_ENTITY: BotEntity
@@ -33,8 +32,6 @@ class MeepMeep(val windowSize: Int) {
     private var bg: Image? = null
 
     private val colorManager = ColorManager()
-
-    private val trajectoryList = mutableListOf<Trajectory>();
 
     private val entityList = mutableListOf<Entity>()
 
@@ -170,21 +167,6 @@ class MeepMeep(val windowSize: Int) {
             DEFAULT_BOT_ENTITY.setDimensions(width, height)
         }
 
-        return this
-    }
-
-    //-------------Trajectory Settings-------------//
-    fun addTrajectory(trajectories: List<Trajectory>): MeepMeep {
-        trajectoryList.addAll(trajectories);
-
-        return this
-    }
-
-    fun addTrajectory(trajectory: Trajectory): MeepMeep {
-        return this
-    }
-
-    fun clearTrajectories(): MeepMeep {
         return this
     }
 

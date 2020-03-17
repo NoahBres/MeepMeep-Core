@@ -1,7 +1,6 @@
-package com.noahbres.meepmeep.colorscheme.scheme
+package com.noahbres.meepmeep.core.colorscheme.scheme
 
-import com.noahbres.meepmeep.colorscheme.ColorManager
-import com.noahbres.meepmeep.colorscheme.ColorScheme
+import com.noahbres.meepmeep.core.colorscheme.ColorManager
 import java.awt.Color
 
 open class ColorSchemeBlueDark: ColorSchemeBlueLight() {

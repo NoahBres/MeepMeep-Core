@@ -1,4 +1,4 @@
-package com.noahbres.meepmeep.ui
+package com.noahbres.meepmeep.core.ui
 
 import java.awt.*
 import java.awt.image.BufferStrategy

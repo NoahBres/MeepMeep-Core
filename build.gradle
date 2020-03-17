@@ -1,19 +1,9 @@
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-
-    implementation 'com.acmerobotics.roadrunner:core:0.5.0'
-}
-
-compileKotlin {
-    kotlinOptions.jvmTarget = 1.8
 }
 
 sourceCompatibility = "8"

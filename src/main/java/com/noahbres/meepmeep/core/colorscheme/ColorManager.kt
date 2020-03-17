@@ -1,7 +1,7 @@
-package com.noahbres.meepmeep.colorscheme
+package com.noahbres.meepmeep.core.colorscheme
 
-import com.noahbres.meepmeep.colorscheme.scheme.ColorSchemeRedDark
-import com.noahbres.meepmeep.colorscheme.scheme.ColorSchemeRedLight
+import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeRedDark
+import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeRedLight
 
 class ColorManager {
     companion object {

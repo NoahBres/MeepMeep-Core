@@ -1,4 +1,4 @@
-package com.noahbres.meepmeep.anim
+package com.noahbres.meepmeep.core.anim
 
 // Eases based off of https://gist.github.com/gre/1650294
 class Ease {

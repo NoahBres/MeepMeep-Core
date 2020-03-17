@@ -1,6 +1,7 @@
 # MeepMeep
-Road Runner Visualizer 2.0
 
-Drawing z-indexes:
+General purpose FTC visualizer/path maker
+
+Drawing z-index:
 bot: 2
 axes: 1

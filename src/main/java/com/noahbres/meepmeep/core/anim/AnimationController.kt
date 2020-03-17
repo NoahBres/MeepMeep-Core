@@ -1,4 +1,4 @@
-package com.noahbres.meepmeep.anim
+package com.noahbres.meepmeep.core.anim
 
 import kotlin.math.max
 import kotlin.math.min

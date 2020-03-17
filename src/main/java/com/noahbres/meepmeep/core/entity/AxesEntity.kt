@@ -1,16 +1,15 @@
-package com.noahbres.meepmeep.entity
+package com.noahbres.meepmeep.core.entity
 
-import com.acmerobotics.roadrunner.geometry.Vector2d
-import com.noahbres.meepmeep.anim.AnimationController
-import com.noahbres.meepmeep.anim.Ease
-import com.noahbres.meepmeep.colorscheme.ColorScheme
-import com.noahbres.meepmeep.util.FieldUtil
+import com.noahbres.meepmeep.core.colorscheme.ColorScheme
+import com.noahbres.meepmeep.core.anim.AnimationController
+import com.noahbres.meepmeep.core.anim.Ease
+import com.noahbres.meepmeep.core.util.FieldUtil
+import com.noahbres.meepmeep.core.util.Vector2d
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics2D
 import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionListener
-import kotlin.math.abs
 
 class AxesEntity
 @JvmOverloads constructor(

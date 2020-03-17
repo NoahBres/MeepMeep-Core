@@ -1,4 +1,4 @@
-package com.noahbres.meepmeep.util
+package com.noahbres.meepmeep.core.util
 
 class LoopManager(targetFPS: Long, val updateFunction: (deltaTime: Long) -> Unit, val renderFunction: () -> Unit): Runnable {
     private val targetDeltaLoop = (1000 * 1000 * 1000) / targetFPS // Nanoseconds / fps
@@ -9,11 +9,11 @@ class LoopManager(targetFPS: Long, val updateFunction: (deltaTime: Long) -> Unit
     private var fpsCounter = 0
     private var fpsCounterTime = 1000
     override fun run() {
-        var beginLoopTime = 0L
-        var endLoopTime = 0L
+        var beginLoopTime: Long
+        var endLoopTime: Long
         var currentUpdateTime = System.nanoTime()
-        var lastUpdateTime = 0L
-        var deltaLoop = 0L
+        var lastUpdateTime: Long
+        var deltaLoop: Long
 
         var startFpsTime = System.currentTimeMillis()
 
@@ -44,11 +44,11 @@ class LoopManager(targetFPS: Long, val updateFunction: (deltaTime: Long) -> Unit
         }
     }
 
-    fun render() {
+    private fun render() {
         renderFunction()
     }
 
-    fun update(deltaTime: Long) {
+    private fun update(deltaTime: Long) {
         updateFunction(deltaTime)
     }
 }
