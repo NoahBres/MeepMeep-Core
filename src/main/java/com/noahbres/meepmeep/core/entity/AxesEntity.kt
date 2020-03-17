@@ -63,7 +63,6 @@ class AxesEntity
     }
 
     override fun render(gfx: Graphics2D, canvasWidth: Int, canvasHeight: Int) {
-        println(colorScheme)
         val pixelThickness = FieldUtil.scaleInchesToPixel(axesThickness)
 
         gfx.color = Color(colorScheme.AXIS_X_COLOR.red, colorScheme.AXIS_X_COLOR.green, colorScheme.AXIS_X_COLOR.blue, (currentOpacity * 255).toInt())
