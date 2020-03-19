@@ -10,19 +10,20 @@ import java.awt.GraphicsEnvironment
 import java.awt.Transparency
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
+import kotlin.math.atan2
 
-class BotEntity(
+open class BotEntity(
         private var width: Double,
         private var height: Double,
 
-        private var pose: Pose2d,
+        var pose: Pose2d,
         private var colorScheme: ColorScheme,
-        private val opacity: Double,
-
-        private var canvasWidth: Int,
-        private var canvasHeight: Int
+        private val opacity: Double
 ) : ThemedEntity {
     override val zIndex = 2
+
+    private var canvasWidth = FieldUtil.CANVAS_WIDTH
+    private var canvasHeight = FieldUtil.CANVAS_HEIGHT
 
     private val WHEEL_WIDTH = 0.2
     private val WHEEL_HEIGHT = 0.3
@@ -32,6 +33,8 @@ class BotEntity(
 
     private val DIRECTION_LINE_WIDTH = 0.05
     private val DIRECTION_LINE_HEIGHT = 0.4
+
+    private val DRAWING_ANGLE_OFFSET = Math.toRadians(90.0)
 
     private lateinit var baseBufferedImage: BufferedImage
 
@@ -49,7 +52,7 @@ class BotEntity(
 
         val transform = AffineTransform()
         transform.translate(coords.x, coords.y)
-        transform.rotate(pose.heading)
+        transform.rotate(atan2(pose.headingVec().x, pose.headingVec().y))
         transform.translate(
                 FieldUtil.scaleInchesToPixel(-width / 2),
                 FieldUtil.scaleInchesToPixel(-height / 2)
@@ -100,7 +103,7 @@ class BotEntity(
         return this
     }
 
-    override fun setCanvasDimensions(canvasWidth: Int, canvasHeight: Int) {
+    override fun setCanvasDimensions(canvasWidth: Double, canvasHeight: Double) {
         this.canvasWidth = canvasWidth
         this.canvasHeight = canvasHeight
     }
