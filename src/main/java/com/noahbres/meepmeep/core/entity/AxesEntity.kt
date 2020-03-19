@@ -16,13 +16,13 @@ class AxesEntity
         private val axesThickness: Double,
         private var colorScheme: ColorScheme,
 
-        private var canvasWidth: Int,
-        private var canvasHeight: Int,
-
         private var font: Font? = null,
         private var fontSize: Float = 20f
 ) : ThemedEntity, MouseMotionListener {
     override val zIndex = 1
+
+    private var canvasWidth = FieldUtil.CANVAS_WIDTH
+    private var canvasHeight = FieldUtil.CANVAS_HEIGHT
 
     private val NUMBER_X_AXIS_X_OFFSET = 0
     private val NUMBER_X_AXIS_Y_OFFSET = 0
@@ -30,8 +30,8 @@ class AxesEntity
     private val TICK_LENGTH = 3.0
     private val TICK_THICKNESS = 0.45
 
-    private val X_INCREMENTS = 18
-    private val Y_INCREMENTS = 18
+    private var X_INCREMENTS = 18
+    private var Y_INCREMENTS = 18
 
     private val X_START = -FieldUtil.FIELD_WIDTH / 2
     private val X_END = FieldUtil.FIELD_WIDTH / 2
@@ -165,13 +165,18 @@ class AxesEntity
         gfx.font = font
     }
 
-    override fun setCanvasDimensions(canvasWidth: Int, canvasHeight: Int) {
+    override fun setCanvasDimensions(canvasWidth: Double, canvasHeight: Double) {
         this.canvasWidth = canvasWidth
         this.canvasHeight = canvasHeight
     }
 
     override fun switchScheme(scheme: ColorScheme) {
         colorScheme = scheme
+    }
+
+    fun setInterval(interval: Int) {
+        X_INCREMENTS = interval
+        Y_INCREMENTS = interval
     }
 
     override fun mouseMoved(e: MouseEvent?) {
