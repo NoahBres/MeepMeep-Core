@@ -8,5 +8,5 @@ interface Entity {
     fun update(deltaTime: Long)
     fun render(gfx: Graphics2D, canvasWidth: Int, canvasHeight: Int)
 
-    fun setCanvasDimensions(canvasWidth: Int, canvasHeight: Int)
+    fun setCanvasDimensions(canvasWidth: Double, canvasHeight: Double)
 }
