@@ -26,19 +26,19 @@ open class MeepMeep<T>(private val windowSize: Int) {
         lateinit var DEFAULT_AXES_ENTITY: AxesEntity
     }
 
-    private val windowFrame = WindowFrame("Meep Meep", windowSize)
-    private val canvas = windowFrame.canvas
+    protected val windowFrame = WindowFrame("Meep Meep", windowSize)
+    protected val canvas = windowFrame.canvas
 
-    private var bg: Image? = null
+    protected var bg: Image? = null
 
-    private val colorManager = ColorManager()
+    protected val colorManager = ColorManager()
 
-    private val entityList = mutableListOf<Entity>()
+    protected val entityList = mutableListOf<Entity>()
 
     // Returns true if entity list needs to be sorted
     private var entityListDirty = false
 
-    private val fontCMUBoldLight: Font
+    protected val fontCMUBoldLight: Font
 
     private val render: () -> Unit = {
         val g = canvas.bufferStrat.drawGraphics as Graphics2D
@@ -87,8 +87,8 @@ open class MeepMeep<T>(private val windowSize: Int) {
         FieldUtil.CANVAS_WIDTH = windowSize.toDouble()
         FieldUtil.CANVAS_HEIGHT = windowSize.toDouble()
 
-        DEFAULT_BOT_ENTITY = BotEntity(18.0, 18.0, Pose2d(), colorManager.theme, 0.8, windowSize, windowSize)
-        DEFAULT_AXES_ENTITY = AxesEntity(0.8, colorManager.theme, windowSize, windowSize, fontCMUBoldLight, 20f)
+        DEFAULT_BOT_ENTITY = BotEntity(18.0, 18.0, Pose2d(), colorManager.theme, 0.8)
+        DEFAULT_AXES_ENTITY = AxesEntity(0.8, colorManager.theme, fontCMUBoldLight, 20f)
 
         setBackground(Background.GRID_BLUE)
 
@@ -104,6 +104,8 @@ open class MeepMeep<T>(private val windowSize: Int) {
         entityList.forEach {
             if (it is ThemedEntity) it.switchScheme(colorManager.theme)
         }
+
+        onCanvasResize()
 
         Thread(loopManager).start()
 
@@ -161,11 +163,27 @@ open class MeepMeep<T>(private val windowSize: Int) {
         return this as T
     }
 
+    private fun onCanvasResize() {
+        FieldUtil.CANVAS_WIDTH = windowSize.toDouble()
+        FieldUtil.CANVAS_HEIGHT = windowSize.toDouble()
+
+        entityList.forEach {
+            it.setCanvasDimensions(FieldUtil.CANVAS_WIDTH, FieldUtil.CANVAS_HEIGHT)
+        }
+    }
+
     //-------------Robot Settings-------------//
-    fun setBotDimensions(width: Double, height: Double): T {
+    open fun setBotDimensions(width: Double, height: Double): T {
         if (DEFAULT_BOT_ENTITY in entityList) {
             DEFAULT_BOT_ENTITY.setDimensions(width, height)
         }
+
+        return this as T
+    }
+
+    //-------------Axes Settings-------------//
+    fun setAxesInterval(interval: Int): T {
+        if (DEFAULT_AXES_ENTITY in entityList) DEFAULT_AXES_ENTITY.setInterval(interval)
 
         return this as T
     }
