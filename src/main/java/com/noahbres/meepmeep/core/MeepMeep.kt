@@ -10,6 +10,7 @@ import com.noahbres.meepmeep.core.ui.WindowFrame
 import com.noahbres.meepmeep.core.util.LoopManager
 import com.noahbres.meepmeep.core.util.FieldUtil
 import com.noahbres.meepmeep.core.util.Pose2d
+import com.noahbres.meepmeep.core.util.Vector2d
 import java.awt.*
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
@@ -144,6 +145,7 @@ open class MeepMeep<T>(private val windowSize: Int) {
         return this as T
     }
 
+
     fun setBackground(image: Image): T {
         bg = image.getScaledInstance(windowSize, windowSize, Image.SCALE_SMOOTH)
 
@@ -220,3 +222,9 @@ open class MeepMeep<T>(private val windowSize: Int) {
         FIELD_SKYSTONE_STARWARS
     }
 }
+
+fun Vector2d.toScreenCoord() = FieldUtil.fieldCoordsToScreenCoords(this)
+
+fun Double.scaleInToPixel() = FieldUtil.scaleInchesToPixel(this)
+fun Double.toDegrees() = Math.toDegrees(this)
+fun Double.toRadians() = Math.toRadians(this)
