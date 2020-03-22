@@ -47,7 +47,7 @@ open class MeepMeep<T>(private val windowSize: Int) {
 
         // render
         if (bg != null) {
-//            val bgAlpha = 0.6f
+//            val bgAlpha = 0.8f
 //            val resetComposite = g.composite
 //            val alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, bgAlpha)
 //
@@ -77,7 +77,7 @@ open class MeepMeep<T>(private val windowSize: Int) {
         entityList.forEach { it.update(deltaTime) }
     }
 
-    private val loopManager = LoopManager(60, update, render)
+    private val loopManager = LoopManager(120, update, render)
 
     init {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
@@ -87,8 +87,8 @@ open class MeepMeep<T>(private val windowSize: Int) {
         FieldUtil.CANVAS_WIDTH = windowSize.toDouble()
         FieldUtil.CANVAS_HEIGHT = windowSize.toDouble()
 
-        DEFAULT_BOT_ENTITY = BotEntity(18.0, 18.0, Pose2d(), colorManager.theme, 0.8)
-        DEFAULT_AXES_ENTITY = AxesEntity(0.8, colorManager.theme, fontCMUBoldLight, 20f)
+        DEFAULT_BOT_ENTITY = BotEntity(this, 18.0, 18.0, Pose2d(), colorManager.theme, 0.8)
+        DEFAULT_AXES_ENTITY = AxesEntity(this, 0.8, colorManager.theme, fontCMUBoldLight, 20f)
 
         setBackground(Background.GRID_BLUE)
 
@@ -134,6 +134,10 @@ open class MeepMeep<T>(private val windowSize: Int) {
             Background.FIELD_SKYSTONE_DARK -> {
                 colorManager.isDarkMode = true
                 ImageIO.read(File("res/background/field-skystone-dark-fix.jpg"))
+            }
+            Background.FIELD_SKYSTONE_STARWARS -> {
+                colorManager.isDarkMode = true
+                ImageIO.read(File("res/background/field-skystone-starwars.png"))
             }
         }.getScaledInstance(windowSize, windowSize, Image.SCALE_SMOOTH)
 
@@ -212,6 +216,7 @@ open class MeepMeep<T>(private val windowSize: Int) {
         FIELD_SKYSTONE,
         FIELD_SKYSTONE_GF,
         FIELD_SKYSTONE_LIGHT,
-        FIELD_SKYSTONE_DARK
+        FIELD_SKYSTONE_DARK,
+        FIELD_SKYSTONE_STARWARS
     }
 }
