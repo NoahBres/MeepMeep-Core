@@ -4,13 +4,14 @@ import com.noahbres.meepmeep.core.MeepMeep
 import com.noahbres.meepmeep.core.colorscheme.ColorScheme
 import com.noahbres.meepmeep.core.anim.AnimationController
 import com.noahbres.meepmeep.core.anim.Ease
+import com.noahbres.meepmeep.core.scaleInToPixel
+import com.noahbres.meepmeep.core.toScreenCoord
 import com.noahbres.meepmeep.core.util.FieldUtil
 import com.noahbres.meepmeep.core.util.Vector2d
-import java.awt.Color
-import java.awt.Font
-import java.awt.Graphics2D
+import java.awt.*
 import java.awt.event.MouseEvent
 import java.awt.event.MouseMotionListener
+import java.awt.image.BufferedImage
 
 class AxesEntity
 @JvmOverloads constructor(
@@ -25,6 +26,8 @@ class AxesEntity
 
     private var canvasWidth = FieldUtil.CANVAS_WIDTH
     private var canvasHeight = FieldUtil.CANVAS_HEIGHT
+
+    private lateinit var baseBufferedImage: BufferedImage
 
     private val NUMBER_X_AXIS_X_OFFSET = 0
     private val NUMBER_X_AXIS_Y_OFFSET = 0
@@ -64,14 +67,29 @@ class AxesEntity
         animationController.update()
     }
 
-    override fun render(gfx: Graphics2D, canvasWidth: Int, canvasHeight: Int) {
-        val pixelThickness = FieldUtil.scaleInchesToPixel(axesThickness)
+    init {
+        redrawAxes()
+    }
 
-        gfx.color = Color(colorScheme.AXIS_X_COLOR.red, colorScheme.AXIS_X_COLOR.green, colorScheme.AXIS_X_COLOR.blue, (currentOpacity * 255).toInt())
-        gfx.fillRect(0, (canvasHeight / 2.0 - pixelThickness / 2).toInt(), canvasWidth, pixelThickness.toInt())
+    private fun redrawAxes() {
+        val environment = GraphicsEnvironment.getLocalGraphicsEnvironment()
+        val device = environment.defaultScreenDevice
+        val config = device.defaultConfiguration
 
-        gfx.color = Color(colorScheme.AXIS_Y_COLOR.red, colorScheme.AXIS_Y_COLOR.green, colorScheme.AXIS_Y_COLOR.blue, (currentOpacity * 255).toInt())
-        gfx.fillRect((canvasWidth / 2.0 - pixelThickness / 2).toInt(), 0, pixelThickness.toInt(), canvasHeight)
+        baseBufferedImage = config.createCompatibleImage(canvasWidth.toInt(), canvasHeight.toInt(), Transparency.TRANSLUCENT)
+        val gfx = baseBufferedImage.createGraphics()
+
+        gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+        gfx.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
+        gfx.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY)
+
+        val pixelThickness = axesThickness.scaleInToPixel()
+
+        gfx.color = colorScheme.AXIS_X_COLOR
+        gfx.fillRect(0, (canvasHeight / 2.0 - pixelThickness / 2).toInt(), canvasWidth.toInt(), pixelThickness.toInt())
+
+        gfx.color = colorScheme.AXIS_Y_COLOR
+        gfx.fillRect((canvasWidth / 2.0 - pixelThickness / 2).toInt(), 0, pixelThickness.toInt(), canvasHeight.toInt())
 
         if (font != null) {
             gfx.font = font
@@ -80,7 +98,7 @@ class AxesEntity
         val fontMetrics = gfx.fontMetrics
 
         // Draw x axis
-        gfx.color = Color(colorScheme.AXIS_X_COLOR.red, colorScheme.AXIS_X_COLOR.green, colorScheme.AXIS_X_COLOR.blue, (currentOpacity * 255).toInt())
+        gfx.color = colorScheme.AXIS_X_COLOR
         for (i in X_START..X_END step X_INCREMENTS) {
             if (i == 0) continue
 
@@ -104,7 +122,7 @@ class AxesEntity
                 xOffsetIn = X_TEXT_NEGATIVE_X_OFFSET
             }
 
-            val textCoords = FieldUtil.fieldCoordsToScreenCoords(Vector2d(i.toDouble() + xOffsetIn, FieldUtil.scaleInchesToPixel(X_TEXT_Y_OFFSET)))
+            val textCoords = Vector2d(i.toDouble() + xOffsetIn, X_TEXT_Y_OFFSET.scaleInToPixel()).toScreenCoord()
 
             gfx.drawString(i.toString(), (textCoords.x + xOffsetPx).toInt(), textCoords.y.toInt())
         }
@@ -113,8 +131,8 @@ class AxesEntity
         font = font?.deriveFont((fontSize * 1.2).toFloat())
         gfx.font = font
 
-        val textNegativeXCoords = FieldUtil.fieldCoordsToScreenCoords(Vector2d((X_START + X_LABEL_X_OFFSET / 2), X_LABEL_Y_OFFSET))
-        val textPositiveXCoords = FieldUtil.fieldCoordsToScreenCoords(Vector2d((X_END - X_LABEL_X_OFFSET), X_LABEL_Y_OFFSET))
+        val textNegativeXCoords = Vector2d((X_START + X_LABEL_X_OFFSET / 2), X_LABEL_Y_OFFSET).toScreenCoord()
+        val textPositiveXCoords = Vector2d((X_END - X_LABEL_X_OFFSET), X_LABEL_Y_OFFSET).toScreenCoord()
 
         gfx.drawString("-x", textNegativeXCoords.x.toInt(), (textNegativeXCoords.y + fontMetrics.ascent).toInt())
         gfx.drawString("x", (textPositiveXCoords.x - fontMetrics.stringWidth("x")).toInt(), (textPositiveXCoords.y + fontMetrics.ascent).toInt())
@@ -124,11 +142,11 @@ class AxesEntity
         gfx.font = font
 
         // Draw y ticks
-        gfx.color = Color(colorScheme.AXIS_Y_COLOR.red, colorScheme.AXIS_Y_COLOR.green, colorScheme.AXIS_Y_COLOR.blue, (currentOpacity * 255).toInt())
+        gfx.color = colorScheme.AXIS_Y_COLOR
         for (i in Y_START..Y_END step Y_INCREMENTS) {
             if (i == 0) continue
 
-            val coords = FieldUtil.fieldCoordsToScreenCoords(Vector2d(0 - TICK_LENGTH / 2, i.toDouble() + (TICK_THICKNESS / 2)))
+            val coords = Vector2d(0 - TICK_LENGTH / 2, i.toDouble() + (TICK_THICKNESS / 2)).toScreenCoord()
 
             gfx.fillRect(
                     coords.x.toInt(),
@@ -147,7 +165,7 @@ class AxesEntity
                 yOffsetPx = -fontMetrics.height.toDouble()
             }
 
-            val textCoords = FieldUtil.fieldCoordsToScreenCoords(Vector2d(FieldUtil.scaleInchesToPixel(Y_TEXT_X_OFFSET), i.toDouble() + yOffsetIn))
+            val textCoords = Vector2d(Y_TEXT_X_OFFSET.scaleInToPixel(), i.toDouble() + yOffsetIn).toScreenCoord()
 
             gfx.drawString(i.toString(), textCoords.x.toInt(), (textCoords.y - yOffsetPx / 2).toInt())
         }
@@ -156,23 +174,31 @@ class AxesEntity
         font = font?.deriveFont((fontSize * 1.2).toFloat())
         gfx.font = font
 
-        val textNegativeYCoords = FieldUtil.fieldCoordsToScreenCoords(Vector2d(Y_LABEL_X_OFFSET, (Y_START + Y_LABEL_Y_OFFSET / 2)))
-        val textPositiveYCoords = FieldUtil.fieldCoordsToScreenCoords(Vector2d(Y_LABEL_X_OFFSET, (Y_END - Y_LABEL_Y_OFFSET)))
+        val textNegativeYCoords = Vector2d(Y_LABEL_X_OFFSET, (Y_START + Y_LABEL_Y_OFFSET / 2)).toScreenCoord()
+        val textPositiveYCoords = Vector2d(Y_LABEL_X_OFFSET, (Y_END - Y_LABEL_Y_OFFSET)).toScreenCoord()
 
         gfx.drawString("-y", (textNegativeYCoords.x - fontMetrics.stringWidth("-y")).toInt(), (textNegativeYCoords.y).toInt())
         gfx.drawString("y", (textPositiveYCoords.x - fontMetrics.stringWidth("y")).toInt(), (textPositiveYCoords.y).toInt())
+    }
 
-        // Reset font size
-        font = font?.deriveFont(fontSize)
-        gfx.font = font
+    override fun render(gfx: Graphics2D, canvasWidth: Int, canvasHeight: Int) {
+        val alpha = currentOpacity.toFloat()
+        val resetComposite = gfx.composite
+        val alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha)
+
+        gfx.composite = alphaComposite
+        gfx.drawImage(baseBufferedImage, null, 0, 0)
+        gfx.composite = resetComposite
     }
 
     override fun setCanvasDimensions(canvasWidth: Double, canvasHeight: Double) {
+        if (this.canvasWidth != canvasWidth || this.canvasHeight != canvasHeight) redrawAxes()
         this.canvasWidth = canvasWidth
         this.canvasHeight = canvasHeight
     }
 
     override fun switchScheme(scheme: ColorScheme) {
+        if (this.colorScheme != scheme) redrawAxes()
         colorScheme = scheme
     }
 
@@ -182,7 +208,8 @@ class AxesEntity
     }
 
     override fun mouseMoved(e: MouseEvent?) {
-        val HOVER_TARGET_PIXELS = FieldUtil.scaleInchesToPixel(HOVER_TARGET)
+        val HOVER_TARGET_PIXELS = HOVER_TARGET.scaleInToPixel()
+
         if ((e!!.x > canvasWidth / 2 - HOVER_TARGET_PIXELS / 2 && e.x < canvasWidth / 2 + HOVER_TARGET_PIXELS / 2) ||
                 e.y > canvasHeight / 2 - HOVER_TARGET_PIXELS / 2 && e.y < canvasHeight / 2 + HOVER_TARGET_PIXELS / 2) {
 //            currentOpacity = hoverOpacity
