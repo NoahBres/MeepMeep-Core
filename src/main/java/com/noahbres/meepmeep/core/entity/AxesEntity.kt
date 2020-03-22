@@ -1,5 +1,6 @@
 package com.noahbres.meepmeep.core.entity
 
+import com.noahbres.meepmeep.core.MeepMeep
 import com.noahbres.meepmeep.core.colorscheme.ColorScheme
 import com.noahbres.meepmeep.core.anim.AnimationController
 import com.noahbres.meepmeep.core.anim.Ease
@@ -13,6 +14,7 @@ import java.awt.event.MouseMotionListener
 
 class AxesEntity
 @JvmOverloads constructor(
+        override val meepMeep: MeepMeep<*>,
         private val axesThickness: Double,
         private var colorScheme: ColorScheme,
 

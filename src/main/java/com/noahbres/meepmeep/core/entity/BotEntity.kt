@@ -1,18 +1,17 @@
 package com.noahbres.meepmeep.core.entity
 
+import com.noahbres.meepmeep.core.MeepMeep
 import com.noahbres.meepmeep.core.colorscheme.ColorScheme
 import com.noahbres.meepmeep.core.util.FieldUtil
 import com.noahbres.meepmeep.core.util.Pose2d
 import com.noahbres.meepmeep.core.util.Vector2d
-import java.awt.Color
-import java.awt.Graphics2D
-import java.awt.GraphicsEnvironment
-import java.awt.Transparency
+import java.awt.*
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 import kotlin.math.atan2
 
 open class BotEntity(
+        override val meepMeep: MeepMeep<*>,
         private var width: Double,
         private var height: Double,
 
@@ -74,6 +73,9 @@ open class BotEntity(
 
         val gfx = baseBufferedImage.createGraphics()
 
+        gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+        gfx.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY)
+
         val colorAlphaBody = Color(colorScheme.BOT_BODY_COLOR.red, colorScheme.BOT_BODY_COLOR.green, colorScheme.BOT_BODY_COLOR.blue, (opacity * 255).toInt())
         gfx.color = colorAlphaBody
         gfx.fillRect(0, 0, canvasWidth.toInt(), canvasHeight.toInt())
@@ -91,14 +93,16 @@ open class BotEntity(
     }
 
     override fun switchScheme(scheme: ColorScheme) {
+        if (this.colorScheme != scheme) redrawBot()
+
         colorScheme = scheme
-        redrawBot()
     }
 
     fun setDimensions(width: Double, height: Double): BotEntity {
+        if (this.width != width || this.height != height) redrawBot()
+
         this.width = width
         this.height = height
-        redrawBot()
 
         return this
     }
