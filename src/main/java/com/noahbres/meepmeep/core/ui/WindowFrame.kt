@@ -1,6 +1,6 @@
 package com.noahbres.meepmeep.core.ui
 
-import java.awt.FlowLayout
+import java.awt.BorderLayout
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import javax.swing.JFrame
@@ -30,8 +30,8 @@ class WindowFrame(title: String, windowSize: Int) : JFrame() {
 
         isResizable = false
 
-        layout = FlowLayout(0, 0, 0)
-        contentPane.add(canvas)
+        layout = BorderLayout()
+        contentPane.add(canvas, BorderLayout.CENTER)
 //        contentPane.add(JButton("test"))
         pack()
 
