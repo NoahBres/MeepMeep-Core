@@ -17,4 +17,8 @@ open class ColorSchemeRedLight : ColorScheme() {
 
     override val AXIS_NORMAL_OPACITY: Double = 0.3
     override val AXIS_HOVER_OPACITY: Double = 0.8
+
+    override val TRAJECTORY_SLIDER_BG: Color = ColorManager.COLOR_PALETTE.GRAY_100
+    override val TRAJECTORY_SLIDER_FG: Color = ColorManager.COLOR_PALETTE.RED_600
+    override val TRAJECTORY_TEXT_COLOR: Color = ColorManager.COLOR_PALETTE.GRAY_900
 }
