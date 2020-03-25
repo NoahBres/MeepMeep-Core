@@ -69,33 +69,64 @@ open class BotEntity(
         val device = environment.defaultScreenDevice
         val config = device.defaultConfiguration
 
-        baseBufferedImage = config.createCompatibleImage(canvasWidth.toInt(), canvasHeight.toInt(), Transparency.TRANSLUCENT)
+        baseBufferedImage = config.createCompatibleImage(
+                canvasWidth.toInt(), canvasHeight.toInt(), Transparency.TRANSLUCENT
+        )
 
         val gfx = baseBufferedImage.createGraphics()
 
         gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
         gfx.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY)
 
-        val colorAlphaBody = Color(colorScheme.BOT_BODY_COLOR.red, colorScheme.BOT_BODY_COLOR.green, colorScheme.BOT_BODY_COLOR.blue, (opacity * 255).toInt())
+        val colorAlphaBody = Color(
+                colorScheme.BOT_BODY_COLOR.red, colorScheme.BOT_BODY_COLOR.green,
+                colorScheme.BOT_BODY_COLOR.blue, (opacity * 255).toInt()
+        )
         gfx.color = colorAlphaBody
         gfx.fillRect(0, 0, canvasWidth.toInt(), canvasHeight.toInt())
 
-        val colorAlphaWheel = Color(colorScheme.BOT_WHEEL_COLOR.red, colorScheme.BOT_WHEEL_COLOR.green, colorScheme.BOT_BODY_COLOR.blue, (opacity * 255).toInt())
+        val colorAlphaWheel = Color(
+                colorScheme.BOT_WHEEL_COLOR.red, colorScheme.BOT_WHEEL_COLOR.green,
+                colorScheme.BOT_BODY_COLOR.blue, (opacity * 255).toInt()
+        )
         gfx.color = colorAlphaWheel
-        gfx.fillRect((WHEEL_PADDING_X * canvasWidth).toInt(), (WHEEL_PADDING_Y * canvasHeight).toInt(), (WHEEL_WIDTH * canvasWidth).toInt(), (WHEEL_HEIGHT * canvasHeight).toInt())
-        gfx.fillRect((canvasWidth - WHEEL_WIDTH * canvasWidth - WHEEL_PADDING_X * canvasWidth).toInt(), (WHEEL_PADDING_Y * canvasHeight).toInt(), (WHEEL_WIDTH * canvasWidth).toInt(), (WHEEL_HEIGHT * canvasHeight).toInt())
-        gfx.fillRect((canvasWidth - WHEEL_WIDTH * canvasWidth - WHEEL_PADDING_X * canvasWidth).toInt(), (canvasHeight - WHEEL_HEIGHT * canvasHeight - WHEEL_PADDING_Y * canvasHeight).toInt(), (WHEEL_WIDTH * canvasWidth).toInt(), (WHEEL_HEIGHT * canvasHeight).toInt())
-        gfx.fillRect((WHEEL_PADDING_X * canvasWidth).toInt(), (canvasHeight - WHEEL_HEIGHT * canvasHeight - WHEEL_PADDING_Y * canvasHeight).toInt(), (WHEEL_WIDTH * canvasWidth).toInt(), (WHEEL_HEIGHT * canvasHeight).toInt())
+        gfx.fillRect(
+                (WHEEL_PADDING_X * canvasWidth).toInt(), (WHEEL_PADDING_Y * canvasHeight).toInt(),
+                (WHEEL_WIDTH * canvasWidth).toInt(), (WHEEL_HEIGHT * canvasHeight).toInt()
+        )
+        gfx.fillRect(
+                (canvasWidth - WHEEL_WIDTH * canvasWidth - WHEEL_PADDING_X * canvasWidth).toInt(),
+                (WHEEL_PADDING_Y * canvasHeight).toInt(), (WHEEL_WIDTH * canvasWidth).toInt(),
+                (WHEEL_HEIGHT * canvasHeight).toInt()
+        )
+        gfx.fillRect(
+                (canvasWidth - WHEEL_WIDTH * canvasWidth - WHEEL_PADDING_X * canvasWidth).toInt(),
+                (canvasHeight - WHEEL_HEIGHT * canvasHeight - WHEEL_PADDING_Y * canvasHeight).toInt(),
+                (WHEEL_WIDTH * canvasWidth).toInt(), (WHEEL_HEIGHT * canvasHeight).toInt()
+        )
+        gfx.fillRect(
+                (WHEEL_PADDING_X * canvasWidth).toInt(),
+                (canvasHeight - WHEEL_HEIGHT * canvasHeight - WHEEL_PADDING_Y * canvasHeight).toInt(),
+                (WHEEL_WIDTH * canvasWidth).toInt(), (WHEEL_HEIGHT * canvasHeight).toInt()
+        )
 
-        val colorAlphaDirection = Color(colorScheme.BOT_DIRECTION_COLOR.red, colorScheme.BOT_DIRECTION_COLOR.green, colorScheme.BOT_DIRECTION_COLOR.blue, (opacity * 255).toInt())
+        val colorAlphaDirection = Color(
+                colorScheme.BOT_DIRECTION_COLOR.red, colorScheme.BOT_DIRECTION_COLOR.green,
+                colorScheme.BOT_DIRECTION_COLOR.blue, (opacity * 255).toInt()
+        )
         gfx.color = colorAlphaDirection
-        gfx.fillRect((canvasWidth / 2 - DIRECTION_LINE_WIDTH * canvasWidth / 2).toInt(), 0, (DIRECTION_LINE_WIDTH * canvasWidth).toInt(), (canvasHeight * DIRECTION_LINE_HEIGHT).toInt())
+        gfx.fillRect(
+                (canvasWidth / 2 - DIRECTION_LINE_WIDTH * canvasWidth / 2).toInt(), 0,
+                (DIRECTION_LINE_WIDTH * canvasWidth).toInt(),
+                (canvasHeight * DIRECTION_LINE_HEIGHT).toInt()
+        )
     }
 
     override fun switchScheme(scheme: ColorScheme) {
-        if (this.colorScheme != scheme) redrawBot()
-
-        colorScheme = scheme
+        if (this.colorScheme != scheme) {
+            colorScheme = scheme
+            redrawBot()
+        }
     }
 
     fun setDimensions(width: Double, height: Double): BotEntity {

@@ -1,9 +1,9 @@
 package com.noahbres.meepmeep.core.entity
 
 import com.noahbres.meepmeep.core.MeepMeep
-import com.noahbres.meepmeep.core.colorscheme.ColorScheme
 import com.noahbres.meepmeep.core.anim.AnimationController
 import com.noahbres.meepmeep.core.anim.Ease
+import com.noahbres.meepmeep.core.colorscheme.ColorScheme
 import com.noahbres.meepmeep.core.scaleInToPixel
 import com.noahbres.meepmeep.core.toScreenCoord
 import com.noahbres.meepmeep.core.util.FieldUtil
@@ -76,20 +76,30 @@ class AxesEntity
         val device = environment.defaultScreenDevice
         val config = device.defaultConfiguration
 
-        baseBufferedImage = config.createCompatibleImage(canvasWidth.toInt(), canvasHeight.toInt(), Transparency.TRANSLUCENT)
+        baseBufferedImage = config.createCompatibleImage(
+                canvasWidth.toInt(), canvasHeight.toInt(), Transparency.TRANSLUCENT
+        )
         val gfx = baseBufferedImage.createGraphics()
 
         gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-        gfx.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON)
+        gfx.setRenderingHint(
+                RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+        )
         gfx.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY)
 
         val pixelThickness = axesThickness.scaleInToPixel()
 
         gfx.color = colorScheme.AXIS_X_COLOR
-        gfx.fillRect(0, (canvasHeight / 2.0 - pixelThickness / 2).toInt(), canvasWidth.toInt(), pixelThickness.toInt())
+        gfx.fillRect(
+                0, (canvasHeight / 2.0 - pixelThickness / 2).toInt(), canvasWidth.toInt(),
+                pixelThickness.toInt()
+        )
 
         gfx.color = colorScheme.AXIS_Y_COLOR
-        gfx.fillRect((canvasWidth / 2.0 - pixelThickness / 2).toInt(), 0, pixelThickness.toInt(), canvasHeight.toInt())
+        gfx.fillRect(
+                (canvasWidth / 2.0 - pixelThickness / 2).toInt(), 0, pixelThickness.toInt(),
+                canvasHeight.toInt()
+        )
 
         if (font != null) {
             gfx.font = font
@@ -103,7 +113,9 @@ class AxesEntity
             if (i == 0) continue
 
             // axis
-            val tickCoords = FieldUtil.fieldCoordsToScreenCoords(Vector2d(i.toDouble() - (TICK_THICKNESS / 2), 0 + TICK_LENGTH / 2))
+            val tickCoords = FieldUtil.fieldCoordsToScreenCoords(
+                    Vector2d(i.toDouble() - (TICK_THICKNESS / 2), 0 + TICK_LENGTH / 2)
+            )
 
             gfx.fillRect(
                     tickCoords.x.toInt(),
@@ -122,7 +134,9 @@ class AxesEntity
                 xOffsetIn = X_TEXT_NEGATIVE_X_OFFSET
             }
 
-            val textCoords = Vector2d(i.toDouble() + xOffsetIn, X_TEXT_Y_OFFSET.scaleInToPixel()).toScreenCoord()
+            val textCoords = Vector2d(
+                    i.toDouble() + xOffsetIn, X_TEXT_Y_OFFSET.scaleInToPixel()
+            ).toScreenCoord()
 
             gfx.drawString(i.toString(), (textCoords.x + xOffsetPx).toInt(), textCoords.y.toInt())
         }
@@ -131,11 +145,21 @@ class AxesEntity
         font = font?.deriveFont((fontSize * 1.2).toFloat())
         gfx.font = font
 
-        val textNegativeXCoords = Vector2d((X_START + X_LABEL_X_OFFSET / 2), X_LABEL_Y_OFFSET).toScreenCoord()
-        val textPositiveXCoords = Vector2d((X_END - X_LABEL_X_OFFSET), X_LABEL_Y_OFFSET).toScreenCoord()
+        val textNegativeXCoords = Vector2d(
+                (X_START + X_LABEL_X_OFFSET / 2), X_LABEL_Y_OFFSET
+        ).toScreenCoord()
+        val textPositiveXCoords = Vector2d(
+                (X_END - X_LABEL_X_OFFSET), X_LABEL_Y_OFFSET
+        ).toScreenCoord()
 
-        gfx.drawString("-x", textNegativeXCoords.x.toInt(), (textNegativeXCoords.y + fontMetrics.ascent).toInt())
-        gfx.drawString("x", (textPositiveXCoords.x - fontMetrics.stringWidth("x")).toInt(), (textPositiveXCoords.y + fontMetrics.ascent).toInt())
+        gfx.drawString(
+                "-x", textNegativeXCoords.x.toInt(),
+                (textNegativeXCoords.y + fontMetrics.ascent).toInt()
+        )
+        gfx.drawString(
+                "x", (textPositiveXCoords.x - fontMetrics.stringWidth("x")).toInt(),
+                (textPositiveXCoords.y + fontMetrics.ascent).toInt()
+        )
 
         // Reset font size
         font = font?.deriveFont(fontSize)
@@ -146,7 +170,9 @@ class AxesEntity
         for (i in Y_START..Y_END step Y_INCREMENTS) {
             if (i == 0) continue
 
-            val coords = Vector2d(0 - TICK_LENGTH / 2, i.toDouble() + (TICK_THICKNESS / 2)).toScreenCoord()
+            val coords = Vector2d(
+                    0 - TICK_LENGTH / 2, i.toDouble() + (TICK_THICKNESS / 2)
+            ).toScreenCoord()
 
             gfx.fillRect(
                     coords.x.toInt(),
@@ -165,20 +191,34 @@ class AxesEntity
                 yOffsetPx = -fontMetrics.height.toDouble()
             }
 
-            val textCoords = Vector2d(Y_TEXT_X_OFFSET.scaleInToPixel(), i.toDouble() + yOffsetIn).toScreenCoord()
+            val textCoords = Vector2d(
+                    Y_TEXT_X_OFFSET.scaleInToPixel(), i.toDouble() + yOffsetIn
+            ).toScreenCoord()
 
-            gfx.drawString(i.toString(), textCoords.x.toInt(), (textCoords.y - yOffsetPx / 2).toInt())
+            gfx.drawString(
+                    i.toString(), textCoords.x.toInt(), (textCoords.y - yOffsetPx / 2).toInt()
+            )
         }
 
         // Increase font size for the x labels
         font = font?.deriveFont((fontSize * 1.2).toFloat())
         gfx.font = font
 
-        val textNegativeYCoords = Vector2d(Y_LABEL_X_OFFSET, (Y_START + Y_LABEL_Y_OFFSET / 2)).toScreenCoord()
-        val textPositiveYCoords = Vector2d(Y_LABEL_X_OFFSET, (Y_END - Y_LABEL_Y_OFFSET)).toScreenCoord()
+        val textNegativeYCoords = Vector2d(
+                Y_LABEL_X_OFFSET, (Y_START + Y_LABEL_Y_OFFSET / 2)
+        ).toScreenCoord()
+        val textPositiveYCoords = Vector2d(
+                Y_LABEL_X_OFFSET, (Y_END - Y_LABEL_Y_OFFSET)
+        ).toScreenCoord()
 
-        gfx.drawString("-y", (textNegativeYCoords.x - fontMetrics.stringWidth("-y")).toInt(), (textNegativeYCoords.y).toInt())
-        gfx.drawString("y", (textPositiveYCoords.x - fontMetrics.stringWidth("y")).toInt(), (textPositiveYCoords.y).toInt())
+        gfx.drawString(
+                "-y", (textNegativeYCoords.x - fontMetrics.stringWidth("-y")).toInt(),
+                (textNegativeYCoords.y).toInt()
+        )
+        gfx.drawString(
+                "y", (textPositiveYCoords.x - fontMetrics.stringWidth("y")).toInt(),
+                (textPositiveYCoords.y).toInt()
+        )
     }
 
     override fun render(gfx: Graphics2D, canvasWidth: Int, canvasHeight: Int) {
@@ -198,8 +238,10 @@ class AxesEntity
     }
 
     override fun switchScheme(scheme: ColorScheme) {
-        if (this.colorScheme != scheme) redrawAxes()
-        colorScheme = scheme
+        if (this.colorScheme != scheme) {
+            colorScheme = scheme
+            redrawAxes()
+        }
     }
 
     fun setInterval(interval: Int) {
