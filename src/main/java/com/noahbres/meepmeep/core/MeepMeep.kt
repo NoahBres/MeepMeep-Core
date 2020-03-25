@@ -7,17 +7,21 @@ import com.noahbres.meepmeep.core.entity.BotEntity
 import com.noahbres.meepmeep.core.entity.Entity
 import com.noahbres.meepmeep.core.entity.ThemedEntity
 import com.noahbres.meepmeep.core.ui.WindowFrame
-import com.noahbres.meepmeep.core.util.LoopManager
 import com.noahbres.meepmeep.core.util.FieldUtil
+import com.noahbres.meepmeep.core.util.LoopManager
 import com.noahbres.meepmeep.core.util.Pose2d
 import com.noahbres.meepmeep.core.util.Vector2d
-import java.awt.*
+import java.awt.Font
+import java.awt.Graphics2D
+import java.awt.Image
+import java.awt.RenderingHints
 import java.awt.event.MouseListener
 import java.awt.event.MouseMotionListener
 import java.io.File
 import javax.imageio.ImageIO
 import javax.swing.UIManager
 
+@Suppress("UNCHECKED_CAST")
 open class MeepMeep<T>(private val windowSize: Int) {
     companion object {
         @JvmStatic
@@ -25,21 +29,30 @@ open class MeepMeep<T>(private val windowSize: Int) {
 
         @JvmStatic
         lateinit var DEFAULT_AXES_ENTITY: AxesEntity
+
+        @JvmStatic
+        lateinit var FONT_CMU_BOLD_LIGHT: Font
+
+        @JvmStatic
+        lateinit var FONT_CMU: Font
+
+        @JvmStatic
+        lateinit var FONT_CMU_BOLD: Font
     }
 
-    protected val windowFrame = WindowFrame("Meep Meep", windowSize)
-    protected val canvas = windowFrame.canvas
+    val windowFrame = WindowFrame("Meep Meep", windowSize)
+    val canvas = windowFrame.canvas
 
     protected var bg: Image? = null
 
     protected val colorManager = ColorManager()
 
     protected val entityList = mutableListOf<Entity>()
+    private val requestedAddEntityList = mutableListOf<Entity>()
+    private val requestedClearEntityList = mutableListOf<Entity>()
 
     // Returns true if entity list needs to be sorted
     private var entityListDirty = false
-
-    protected val fontCMUBoldLight: Font
 
     private val render: () -> Unit = {
         val g = canvas.bufferStrat.drawGraphics as Graphics2D
@@ -68,14 +81,25 @@ open class MeepMeep<T>(private val windowSize: Int) {
         g.dispose()
         canvas.bufferStrat.show()
     }
-    private val update: (deltaTime: Long) -> Unit = { deltaTime ->
 
+    private val update: (deltaTime: Long) -> Unit = { deltaTime ->
         if (entityListDirty) {
+            requestedClearEntityList.forEach {
+                entityList.remove(it)
+            }
+
+            requestedAddEntityList.forEach {
+                entityList.add(it)
+            }
+
             entityList.sortBy { it.zIndex }
             entityListDirty = false
         }
 
-        entityList.forEach { it.update(deltaTime) }
+        val originalSize = entityList.size
+        for(i in 0 until originalSize) {
+            entityList[i].update(deltaTime)
+        }
     }
 
     private val loopManager = LoopManager(120, update, render)
@@ -83,13 +107,15 @@ open class MeepMeep<T>(private val windowSize: Int) {
     init {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 
-        fontCMUBoldLight = Font.createFont(Font.TRUETYPE_FONT, File("res/font/cmunbi.ttf")).deriveFont(20f)
+        FONT_CMU_BOLD_LIGHT = Font.createFont(Font.TRUETYPE_FONT, File("res/font/cmunbi.ttf")).deriveFont(20f)
+        FONT_CMU = Font.createFont(Font.TRUETYPE_FONT, File("res/font/cmunrm.ttf"))
+        FONT_CMU_BOLD = Font.createFont(Font.TRUETYPE_FONT, File("res/font/cmunbx.ttf"))
 
         FieldUtil.CANVAS_WIDTH = windowSize.toDouble()
         FieldUtil.CANVAS_HEIGHT = windowSize.toDouble()
 
         DEFAULT_BOT_ENTITY = BotEntity(this, 18.0, 18.0, Pose2d(), colorManager.theme, 0.8)
-        DEFAULT_AXES_ENTITY = AxesEntity(this, 0.8, colorManager.theme, fontCMUBoldLight, 20f)
+        DEFAULT_AXES_ENTITY = AxesEntity(this, 0.8, colorManager.theme, FONT_CMU_BOLD_LIGHT, 20f)
 
         setBackground(Background.GRID_BLUE)
 
@@ -103,7 +129,7 @@ open class MeepMeep<T>(private val windowSize: Int) {
         // Default added entities are initialized before color schemes are set
         // Thus make sure to reset them
         entityList.forEach {
-            if (it is ThemedEntity) it.switchScheme(colorManager.theme)
+            if(it is ThemedEntity) it.switchScheme(colorManager.theme)
         }
 
         onCanvasResize()
@@ -208,6 +234,20 @@ open class MeepMeep<T>(private val windowSize: Int) {
 
     fun removeEntity(entity: Entity): T {
         entityList.remove(entity)
+        entityListDirty = true
+
+        return this as T
+    }
+
+    fun requestToAddEntity(entity: Entity): T {
+        requestedAddEntityList.add(entity)
+        entityListDirty = true
+
+        return this as T
+    }
+
+    fun requestToClearEntity(entity: Entity): T {
+        requestedClearEntityList.add(entity)
         entityListDirty = true
 
         return this as T
