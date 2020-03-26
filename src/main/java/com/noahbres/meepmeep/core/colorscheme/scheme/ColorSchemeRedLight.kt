@@ -14,6 +14,7 @@ open class ColorSchemeRedLight : ColorScheme() {
 
     override val TRAJCETORY_PATH_COLOR: Color = ColorManager.COLOR_PALETTE.BLUE_500
     override val TRAJECTORY_TURN_COLOR: Color = ColorManager.COLOR_PALETTE.PINK_600
+    override val TRAJECTORY_MARKER_COLOR: Color = ColorManager.COLOR_PALETTE.ORANGE_600
 
     override val AXIS_NORMAL_OPACITY: Double = 0.3
     override val AXIS_HOVER_OPACITY: Double = 0.8
