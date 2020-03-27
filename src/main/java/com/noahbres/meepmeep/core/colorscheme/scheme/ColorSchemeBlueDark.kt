@@ -4,6 +4,8 @@ import com.noahbres.meepmeep.core.colorscheme.ColorManager
 import java.awt.Color
 
 open class ColorSchemeBlueDark: ColorSchemeBlueLight() {
+    override val isDark: Boolean = true
+
     override val AXIS_X_COLOR: Color = ColorManager.COLOR_PALETTE.GRAY_300
     override val AXIS_Y_COLOR: Color = ColorManager.COLOR_PALETTE.GRAY_300
 

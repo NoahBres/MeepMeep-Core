@@ -3,6 +3,8 @@ package com.noahbres.meepmeep.core.colorscheme
 import java.awt.Color
 
 abstract class ColorScheme {
+    abstract val isDark: Boolean
+
     abstract val BOT_BODY_COLOR: Color
     abstract val BOT_WHEEL_COLOR: Color
     abstract val BOT_DIRECTION_COLOR: Color

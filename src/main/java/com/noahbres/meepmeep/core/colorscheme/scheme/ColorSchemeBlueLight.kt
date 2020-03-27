@@ -5,6 +5,8 @@ import com.noahbres.meepmeep.core.colorscheme.ColorScheme
 import java.awt.Color
 
 open class ColorSchemeBlueLight: ColorScheme() {
+    override val isDark: Boolean = false
+
     override val BOT_BODY_COLOR = ColorManager.COLOR_PALETTE.BLUE_600
     override val BOT_WHEEL_COLOR = ColorManager.COLOR_PALETTE.BLUE_800
     override val BOT_DIRECTION_COLOR = ColorManager.COLOR_PALETTE.BLUE_800
