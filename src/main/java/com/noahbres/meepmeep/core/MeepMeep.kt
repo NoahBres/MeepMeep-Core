@@ -2,10 +2,7 @@ package com.noahbres.meepmeep.core
 
 import com.noahbres.meepmeep.core.colorscheme.ColorManager
 import com.noahbres.meepmeep.core.colorscheme.ColorScheme
-import com.noahbres.meepmeep.core.entity.AxesEntity
-import com.noahbres.meepmeep.core.entity.BotEntity
-import com.noahbres.meepmeep.core.entity.Entity
-import com.noahbres.meepmeep.core.entity.ThemedEntity
+import com.noahbres.meepmeep.core.entity.*
 import com.noahbres.meepmeep.core.ui.WindowFrame
 import com.noahbres.meepmeep.core.util.FieldUtil
 import com.noahbres.meepmeep.core.util.LoopManager
@@ -29,6 +26,9 @@ open class MeepMeep<T>(private val windowSize: Int) {
 
         @JvmStatic
         lateinit var DEFAULT_AXES_ENTITY: AxesEntity
+
+        @JvmStatic
+        lateinit var DEFAULT_COMPASS_ENTITY: CompassEntity
 
         @JvmStatic
         lateinit var FONT_CMU_BOLD_LIGHT: Font
@@ -116,11 +116,13 @@ open class MeepMeep<T>(private val windowSize: Int) {
 
         DEFAULT_BOT_ENTITY = BotEntity(this, 18.0, 18.0, Pose2d(), colorManager.theme, 0.8)
         DEFAULT_AXES_ENTITY = AxesEntity(this, 0.8, colorManager.theme, FONT_CMU_BOLD_LIGHT, 20f)
+        DEFAULT_COMPASS_ENTITY = CompassEntity(this, colorManager.theme, 30.0, 30.0, Vector2d(-54.0, 54.0))
 
         setBackground(Background.GRID_BLUE)
 
         addEntity(DEFAULT_BOT_ENTITY)
         addEntity(DEFAULT_AXES_ENTITY)
+        addEntity(DEFAULT_COMPASS_ENTITY)
     }
 
     open fun start(): T {
