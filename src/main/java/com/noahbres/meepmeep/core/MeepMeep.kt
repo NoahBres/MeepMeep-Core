@@ -85,11 +85,11 @@ open class MeepMeep<T>(private val windowSize: Int) {
     private val update: (deltaTime: Long) -> Unit = { deltaTime ->
         if (entityListDirty) {
             requestedClearEntityList.forEach {
-                entityList.remove(it)
+                removeEntity(it)
             }
 
             requestedAddEntityList.forEach {
-                entityList.add(it)
+                addEntity(it)
             }
 
             entityList.sortBy { it.zIndex }
@@ -237,6 +237,11 @@ open class MeepMeep<T>(private val windowSize: Int) {
     fun removeEntity(entity: Entity): T {
         entityList.remove(entity)
         entityListDirty = true
+
+
+        if (entity is MouseListener) canvas.removeMouseListener(entity)
+
+        if (entity is MouseMotionListener) canvas.removeMouseMotionListener(entity)
 
         return this as T
     }
