@@ -4,7 +4,7 @@ import com.noahbres.meepmeep.core.colorscheme.ColorManager
 import com.noahbres.meepmeep.core.colorscheme.ColorScheme
 import java.awt.Color
 
-open class ColorSchemeBlueLight: ColorScheme() {
+open class ColorSchemeBlueLight : ColorScheme() {
     override val isDark: Boolean = false
 
     override val BOT_BODY_COLOR = ColorManager.COLOR_PALETTE.BLUE_600
@@ -26,4 +26,5 @@ open class ColorSchemeBlueLight: ColorScheme() {
     override val TRAJECTORY_SLIDER_FG: Color = ColorManager.COLOR_PALETTE.BLUE_600
     override val TRAJECTORY_TEXT_COLOR: Color = ColorManager.COLOR_PALETTE.GRAY_900
 
+    override val UI_MAIN_BG: Color = ColorManager.COLOR_PALETTE.GRAY_200
 }

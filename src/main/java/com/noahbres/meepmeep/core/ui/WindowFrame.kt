@@ -1,9 +1,10 @@
 package com.noahbres.meepmeep.core.ui
 
-import java.awt.BorderLayout
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import javax.swing.BoxLayout
 import javax.swing.JFrame
+import javax.swing.JPanel
 import kotlin.system.exitProcess
 
 class WindowFrame(title: String, windowSize: Int) : JFrame() {
@@ -11,6 +12,7 @@ class WindowFrame(title: String, windowSize: Int) : JFrame() {
     var internalHeight = windowSize
 
     val canvas = MainCanvas(internalWidth, internalHeight)
+    val canvasPanel = JPanel()
 
     init {
         setTitle(title)
@@ -30,9 +32,12 @@ class WindowFrame(title: String, windowSize: Int) : JFrame() {
 
         isResizable = false
 
-        layout = BorderLayout()
-        contentPane.add(canvas, BorderLayout.CENTER)
-//        contentPane.add(JButton("test"))
+        layout = BoxLayout(contentPane, BoxLayout.X_AXIS)
+
+        canvasPanel.layout = BoxLayout(canvasPanel, BoxLayout.Y_AXIS)
+        canvasPanel.add(canvas)
+
+        contentPane.add(canvasPanel)
         pack()
 
         canvas.start()

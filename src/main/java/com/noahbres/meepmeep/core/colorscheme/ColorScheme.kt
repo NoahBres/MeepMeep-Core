@@ -21,4 +21,6 @@ abstract class ColorScheme {
     abstract val TRAJECTORY_SLIDER_BG: Color
     abstract val TRAJECTORY_SLIDER_FG: Color
     abstract val TRAJECTORY_TEXT_COLOR: Color
+
+    abstract val UI_MAIN_BG: Color
 }

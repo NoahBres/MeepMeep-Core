@@ -14,4 +14,5 @@ open class ColorSchemeRedDark : ColorSchemeRedLight() {
     override val TRAJECTORY_SLIDER_BG: Color = ColorManager.COLOR_PALETTE.GRAY_800
     override val TRAJECTORY_TEXT_COLOR: Color = ColorManager.COLOR_PALETTE.GRAY_100
 
+    override val UI_MAIN_BG: Color = ColorManager.COLOR_PALETTE.GRAY_800
 }

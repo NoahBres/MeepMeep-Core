@@ -97,7 +97,7 @@ open class MeepMeep<T>(private val windowSize: Int) {
         }
 
         val originalSize = entityList.size
-        for(i in 0 until originalSize) {
+        for (i in 0 until originalSize) {
             entityList[i].update(deltaTime)
         }
     }
@@ -107,7 +107,12 @@ open class MeepMeep<T>(private val windowSize: Int) {
     init {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
 
-        FONT_CMU_BOLD_LIGHT = Font.createFont(Font.TRUETYPE_FONT, File("res/font/cmunbi.ttf")).deriveFont(20f)
+        windowFrame.contentPane.background = colorManager.theme.UI_MAIN_BG
+        windowFrame.canvasPanel.background = colorManager.theme.UI_MAIN_BG
+
+        FONT_CMU_BOLD_LIGHT = Font.createFont(
+                Font.TRUETYPE_FONT, File("res/font/cmunbi.ttf")
+        ).deriveFont(20f)
         FONT_CMU = Font.createFont(Font.TRUETYPE_FONT, File("res/font/cmunrm.ttf"))
         FONT_CMU_BOLD = Font.createFont(Font.TRUETYPE_FONT, File("res/font/cmunbx.ttf"))
 
@@ -116,9 +121,9 @@ open class MeepMeep<T>(private val windowSize: Int) {
 
         DEFAULT_BOT_ENTITY = BotEntity(this, 18.0, 18.0, Pose2d(), colorManager.theme, 0.8)
         DEFAULT_AXES_ENTITY = AxesEntity(this, 0.8, colorManager.theme, FONT_CMU_BOLD_LIGHT, 20f)
-        DEFAULT_COMPASS_ENTITY = CompassEntity(this, colorManager.theme, 30.0, 30.0, Vector2d(-54.0, 54.0))
-
-        setBackground(Background.GRID_BLUE)
+        DEFAULT_COMPASS_ENTITY = CompassEntity(
+                this, colorManager.theme, 30.0, 30.0, Vector2d(-54.0, 54.0)
+        )
 
         addEntity(DEFAULT_BOT_ENTITY)
         addEntity(DEFAULT_AXES_ENTITY)
@@ -126,12 +131,13 @@ open class MeepMeep<T>(private val windowSize: Int) {
     }
 
     open fun start(): T {
+        if(bg == null) setBackground(Background.GRID_BLUE)
         windowFrame.isVisible = true
 
         // Default added entities are initialized before color schemes are set
         // Thus make sure to reset them
         entityList.forEach {
-            if(it is ThemedEntity) it.switchScheme(colorManager.theme)
+            if (it is ThemedEntity) it.switchScheme(colorManager.theme)
         }
 
         onCanvasResize()
@@ -170,6 +176,8 @@ open class MeepMeep<T>(private val windowSize: Int) {
             }
         }.getScaledInstance(windowSize, windowSize, Image.SCALE_SMOOTH)
 
+        refreshTheme()
+
         return this as T
     }
 
@@ -184,11 +192,18 @@ open class MeepMeep<T>(private val windowSize: Int) {
     fun setTheme(schemeLight: ColorScheme, schemeDark: ColorScheme = schemeLight): T {
         colorManager.setTheme(schemeLight, schemeDark)
 
+        refreshTheme()
+
+        return this as T
+    }
+
+    open fun refreshTheme() {
         entityList.forEach {
             if (it is ThemedEntity) it.switchScheme(colorManager.theme)
         }
 
-        return this as T
+        windowFrame.contentPane.background = colorManager.theme.UI_MAIN_BG
+        windowFrame.canvasPanel.background = colorManager.theme.UI_MAIN_BG
     }
 
     fun setDarkMode(isDarkMode: Boolean): T {
@@ -269,9 +284,3 @@ open class MeepMeep<T>(private val windowSize: Int) {
         FIELD_SKYSTONE_STARWARS
     }
 }
-
-fun Vector2d.toScreenCoord() = FieldUtil.fieldCoordsToScreenCoords(this)
-
-fun Double.scaleInToPixel() = FieldUtil.scaleInchesToPixel(this)
-fun Double.toDegrees() = Math.toDegrees(this)
-fun Double.toRadians() = Math.toRadians(this)
